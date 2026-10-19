@@ -1,10 +1,7 @@
 """Fashion-MNIST clothing classifier: a multi-layer perceptron built with PyTorch.
 
 Trains a fully connected network on the 10-class Fashion-MNIST dataset,
-plots the training loss, saves the model, and reports test accuracy.
-
-Requirements: torch, torchvision, torchsummary, tqdm, matplotlib
-"""
+plots the training loss, saves the model, and reports test accuracy."""
 
 import os
 
@@ -23,11 +20,9 @@ LEARNING_RATE = 1e-3
 MODEL_PATH = "models/ann.pt"
 
 
-# --------------------------------------------------------------------------
 # Data
-# --------------------------------------------------------------------------
+
 def load_data(batch_size=BATCH_SIZE):
-    """Download Fashion-MNIST and return datasets and dataloaders."""
     train_data = datasets.FashionMNIST(
         root="data", train=True, download=True, transform=ToTensor()
     )
@@ -40,9 +35,8 @@ def load_data(batch_size=BATCH_SIZE):
     return train_data, test_data, train_dataloader, test_dataloader
 
 
-# --------------------------------------------------------------------------
 # Model
-# --------------------------------------------------------------------------
+
 class MultiLayerPerceptron(nn.Module):
     """784 -> 256 -> 128 -> 32 -> 10 fully connected network with ReLU."""
 
@@ -63,11 +57,9 @@ class MultiLayerPerceptron(nn.Module):
         return self.layers(x)
 
 
-# --------------------------------------------------------------------------
 # Training
-# --------------------------------------------------------------------------
+
 def train_loop(train_dataloader, model, loss_fn, optimizer, epochs):
-    """Train the model and return the average loss for each epoch."""
     model.train()
     train_loss = []
 
@@ -89,7 +81,6 @@ def train_loop(train_dataloader, model, loss_fn, optimizer, epochs):
 
 
 def plot_loss(losses):
-    """Plot training loss over epochs."""
     plt.plot(range(1, len(losses) + 1), losses)
     plt.title("Training Loss")
     plt.xlabel("Epochs")
@@ -97,15 +88,13 @@ def plot_loss(losses):
     plt.show()
 
 
-# --------------------------------------------------------------------------
 # Evaluation
-# --------------------------------------------------------------------------
+
 def accuracy(correct, total):
     return correct / total * 100
 
 
 def test_loop(test_dataloader, model):
-    """Evaluate the model on the test set and return accuracy (%)."""
     model.eval()
     correct = 0
     total = 0
@@ -122,7 +111,6 @@ def test_loop(test_dataloader, model):
 
 
 def predict_random_sample(model, test_data):
-    """Classify one random test image and display it with its prediction."""
     model.eval()
     idx = torch.randint(0, len(test_data), (1,)).item()
     image, label = test_data[idx]
@@ -139,9 +127,8 @@ def predict_random_sample(model, test_data):
     plt.show()
 
 
-# --------------------------------------------------------------------------
 # Persistence
-# --------------------------------------------------------------------------
+
 def save_model(model, path=MODEL_PATH):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     torch.save(model.state_dict(), path)
@@ -153,9 +140,8 @@ def load_model(path=MODEL_PATH):
     return model
 
 
-# --------------------------------------------------------------------------
 # Main
-# --------------------------------------------------------------------------
+
 def main():
     train_data, test_data, train_dataloader, test_dataloader = load_data()
     print(f"Train samples: {len(train_data)} | Test samples: {len(test_data)}")
